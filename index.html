@@ -36,7 +36,7 @@
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* North Arrow - Moved to Bottom Right */
+        /* North Arrow - Bottom Right */
         .north-arrow-container {
             position: absolute;
             bottom: 20px; 
@@ -49,23 +49,23 @@
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
         }
 
-        /* Compact Scale Line (Lessened Buffer) */
+        /* Compact Scale Line - Bottom Left */
         .ol-scale-line {
             left: 15px !important;
             bottom: 15px !important;
             background: rgba(255, 255, 255, 0.7) !important;
             border: 1px solid #333 !important;
             border-radius: 0px !important;
-            padding: 0px 2px !important; /* Minimal internal buffer */
+            padding: 0px 2px !important;
             z-index: 5000 !important;
         }
         .ol-scale-line-inner {
             border: 1px solid #333 !important;
             border-top: none !important;
             color: #000 !important;
-            font-size: 9px !important; /* Smaller font for a tighter look */
+            font-size: 9px !important;
             font-weight: bold !important;
-            margin: 1px !important; /* Minimal margin */
+            margin: 1px !important;
         }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
@@ -115,10 +115,10 @@
         <script src="./resources/qgis2web.js"></script>
         
         <script>
-            // Initialize Scale Control with Metric units
+            // Initialize Scale Control on the Bottom Left
             var scaleLineControl = new ol.control.ScaleLine({
                 units: 'metric',
-                minWidth: 80 // Slightly narrower
+                minWidth: 80
             });
             map.addControl(scaleLineControl);
         </script>
