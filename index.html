@@ -36,42 +36,27 @@
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* Embedded North Arrow (SVG) */
+        /* North Arrow Style */
         .north-arrow-container {
             position: absolute;
-            bottom: 60px; /* Raised to make room for scale bar */
+            bottom: 65px; 
             left: 20px;
             z-index: 5000;
-            text-align: center;
         }
         .north-arrow-svg {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
         }
 
-        /* Style for the dynamic OpenLayers Scale Line */
+        /* Dynamic OpenLayers Scale Line */
         .ol-scale-line {
             left: 20px !important;
             bottom: 20px !important;
             background: rgba(255, 255, 255, 0.8) !important;
-            border-radius: 4px !important;
-            padding: 2px !important;
+            border: 1px solid #333 !important;
+            border-radius: 0px !important;
             z-index: 5000 !important;
-        }
-        
-        /* Survey Info Label */
-        .survey-label {
-            position: absolute;
-            bottom: 20px;
-            left: 140px; /* Positioned next to the scale bar */
-            z-index: 5000;
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            font-weight: bold;
-            color: #333;
-            background: rgba(255,255,255,0.6);
-            padding: 2px 5px;
         }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
@@ -84,14 +69,12 @@
 
             <div class="north-arrow-container">
                 <svg class="north-arrow-svg" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="48" fill="white" fill-opacity="0.3" stroke="black" stroke-width="2"/>
-                    <path d="M50 5 L60 45 L50 40 L40 45 Z" fill="red" stroke="black" stroke-width="1"/>
-                    <path d="M50 95 L40 55 L50 60 L60 55 Z" fill="black" stroke="black" stroke-width="1"/>
-                    <text x="45" y="25" font-family="Arial" font-size="12" font-weight="bold">N</text>
+                    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.2" />
+                    <path d="M50 5 L65 45 L50 38 L35 45 Z" fill="#e74c3c" stroke="black" stroke-width="1.5"/>
+                    <path d="M50 95 L35 55 L50 62 L65 55 Z" fill="#2c3e50" stroke="black" stroke-width="1.5"/>
+                    <text x="44" y="28" font-family="Arial" font-size="14" font-weight="bold" fill="black">N</text>
                 </svg>
             </div>
-
-            <div class="survey-label">MSEUF GEODETIC ENG.</div>
 
             <div id="popup" class="ol-popup">
                 <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -123,12 +106,8 @@
         <script src="./resources/qgis2web.js"></script>
         
         <script>
-            // This manually adds the dynamic Scale Bar to your map
             var scaleLineControl = new ol.control.ScaleLine({
                 units: 'metric',
-                bar: true,
-                steps: 4,
-                text: true,
                 minWidth: 100
             });
             map.addControl(scaleLineControl);
