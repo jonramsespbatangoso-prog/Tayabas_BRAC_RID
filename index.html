@@ -33,34 +33,36 @@
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* North Arrow - Bottom Right */
+        /* North Arrow - Fixed Bottom Right */
         .north-arrow-container {
-            position: absolute !important;
-            bottom: 20px !important; 
-            right: 20px !important;
+            position: absolute;
+            bottom: 20px; 
+            right: 20px;
             z-index: 5000;
         }
         .north-arrow-svg {
-            width: 55px; height: 55px;
+            width: 55px;
+            height: 55px;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
         }
 
-        /* Scale Ratio - Bottom Left */
+        /* Scale Ratio (1:Scale) - Fixed Bottom Left */
         .custom-scale-ratio {
-            position: absolute !important;
-            bottom: 20px !important;
-            left: 20px !important;
-            z-index: 5001 !important;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 5px 12px;
-            border: 1.5px solid #333;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 5000;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 10px;
+            border: 1px solid #333;
             font-family: 'Courier New', monospace;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             color: #000;
             pointer-events: none;
         }
 
+        /* Hide the default OpenLayers Scale Line if it appears elsewhere */
         .ol-scale-line { display: none !important; }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
@@ -70,7 +72,9 @@
             <a href="dashboard.html" class="dashboard-btn">
                 <i class="fas fa-chart-bar"></i> DASHBOARD
             </a>
+
             <div id="scale-ratio" class="custom-scale-ratio">Scale 1:---</div>
+
             <div class="north-arrow-container">
                 <svg class="north-arrow-svg" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.2" />
@@ -79,6 +83,7 @@
                     <text x="44" y="28" font-family="Arial" font-size="14" font-weight="bold" fill="black">N</text>
                 </svg>
             </div>
+
             <div id="popup" class="ol-popup">
                 <a href="#" id="popup-closer" class="ol-popup-closer"></a>
                 <div id="popup-content"></div>
@@ -92,48 +97,24 @@
         <script src="./resources/ol.js"></script>
         <script src="./resources/ol-layerswitcher.js"></script>
         <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+        <script src="layers/layers.js" type="text/javascript"></script> 
         <script src="./resources/Autolinker.min.js"></script>
-
-        <script src="layers/TayabasAdministrativeMap_1.js"></script>
-        <script src="layers/Elevation_2.js"></script>
-        <script src="layers/SurfaceType_3.js"></script>
-        <script src="layers/RoadCondition_4.js"></script>
-        <script src="layers/RoadClassification_5.js"></script>
-        <script src="layers/RoadinventoryDatabase_6.js"></script>
-        <script src="styles/TayabasAdministrativeMap_1_style.js"></script>
-        <script src="styles/Elevation_2_style.js"></script>
-        <script src="styles/SurfaceType_3_style.js"></script>
-        <script src="styles/RoadCondition_4_style.js"></script>
-        <script src="styles/RoadClassification_5_style.js"></script>
-        <script src="styles/RoadinventoryDatabase_6_style.js"></script>
-        <script src="./layers/layers.js" type="text/javascript"></script> 
-
         <script src="./resources/qgis2web.js"></script>
         
         <script>
+            // Script to calculate and display the 1:Scale ratio dynamically
             function updateScale() {
-                if (typeof map !== 'undefined') {
-                    var view = map.getView();
-                    var resolution = view.getResolution();
-                    var projection = view.getProjection();
-                    var center = view.getCenter();
-                    var mpu = ol.proj.getPointResolution(projection, resolution, center) * (1/resolution);
-                    
-                    var dpi = 25.4 / 0.28; 
-                    var inchesPerMeter = 39.37;
-                    var scale = resolution * mpu * inchesPerMeter * dpi;
-                    
-                    document.getElementById('scale-ratio').innerHTML = "Scale 1:" + Math.round(scale).toLocaleString();
-                }
+                var resolution = map.getView().getResolution();
+                var units = map.getView().getProjection().getUnits();
+                var dpi = 25.4 / 0.28; // Standard OGC DPI
+                var mpu = ol.proj.METERS_PER_UNIT[units];
+                var scale = resolution * mpu * 39.37 * dpi;
+                document.getElementById('scale-ratio').innerHTML = "Scale 1:" + Math.round(scale).toLocaleString();
             }
 
-            // Small delay to ensure 'map' object is created by qgis2web.js
-            setTimeout(function() {
-                if (typeof map !== 'undefined') {
-                    map.getView().on('change:resolution', updateScale);
-                    updateScale();
-                }
-            }, 500);
+            // Update scale on every zoom change
+            map.getView().on('change:resolution', updateScale);
+            updateScale(); // Initial call
         </script>
     </body>
 </html>
