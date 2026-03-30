@@ -16,49 +16,26 @@
 
         /* Dashboard Button */
         .dashboard-btn {
-            position: absolute; 
-            top: 15px; 
-            right: 60px; 
-            z-index: 5000; 
-            background: #2b3d51; 
-            color: #ffffff !important; 
-            padding: 10px 18px; 
-            border-radius: 8px; 
-            text-decoration: none !important; 
-            font-family: 'Segoe UI', sans-serif; 
-            font-weight: bold; 
-            font-size: 13px;
+            position: absolute; top: 15px; right: 60px; z-index: 5000; 
+            background: #2b3d51; color: #ffffff !important; 
+            padding: 10px 18px; border-radius: 8px; 
+            text-decoration: none !important; font-family: 'Segoe UI', sans-serif; 
+            font-weight: bold; font-size: 13px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.2);
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* North Arrow - Bottom Right */
+        /* North Arrow - Fixed Bottom Right */
         .north-arrow-container {
-            position: absolute !important;
-            bottom: 20px !important; 
-            right: 20px !important;
-            z-index: 5000;
-        }
-        .north-arrow-svg {
-            width: 55px; height: 55px;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
+            position: absolute !important; bottom: 20px !important; right: 20px !important; z-index: 5000;
         }
 
-        /* Scale Ratio - Bottom Left */
+        /* Scale Ratio - Fixed Bottom Left */
         .custom-scale-ratio {
-            position: absolute !important;
-            bottom: 20px !important;
-            left: 20px !important;
-            z-index: 5001 !important;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 5px 12px;
-            border: 1.5px solid #333;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            font-weight: bold;
-            color: #000;
-            pointer-events: none;
+            position: absolute !important; bottom: 20px !important; left: 20px !important; z-index: 5001 !important;
+            background: rgba(255, 255, 255, 0.9); padding: 5px 12px; border: 1.5px solid #333;
+            font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold; color: #000;
         }
 
         .ol-scale-line { display: none !important; }
@@ -72,16 +49,12 @@
             </a>
             <div id="scale-ratio" class="custom-scale-ratio">Scale 1:---</div>
             <div class="north-arrow-container">
-                <svg class="north-arrow-svg" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.2" />
-                    <path d="M50 5 L65 45 L50 38 L35 45 Z" fill="#e74c3c" stroke="black" stroke-width="1"/>
-                    <path d="M50 95 L35 55 L50 62 L65 55 Z" fill="#2c3e50" stroke="black" stroke-width="1"/>
-                    <text x="44" y="28" font-family="Arial" font-size="14" font-weight="bold" fill="black">N</text>
+                <svg width="60" height="60" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.3" />
+                    <path d="M50 5 L65 45 L50 38 L35 45 Z" fill="#e74c3c" stroke="black" />
+                    <path d="M50 95 L35 55 L50 62 L65 55 Z" fill="#2c3e50" stroke="black" />
+                    <text x="44" y="28" font-family="Arial" font-size="14" font-weight="bold">N</text>
                 </svg>
-            </div>
-            <div id="popup" class="ol-popup">
-                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                <div id="popup-content"></div>
             </div>
         </div>
 
@@ -111,29 +84,21 @@
         <script src="./resources/qgis2web.js"></script>
         
         <script>
-            function updateScale() {
+            // Safety Check: Only run if the map object was successfully created
+            window.onload = function() {
                 if (typeof map !== 'undefined') {
-                    var view = map.getView();
-                    var resolution = view.getResolution();
-                    var projection = view.getProjection();
-                    var center = view.getCenter();
-                    var mpu = ol.proj.getPointResolution(projection, resolution, center) * (1/resolution);
-                    
-                    var dpi = 25.4 / 0.28; 
-                    var inchesPerMeter = 39.37;
-                    var scale = resolution * mpu * inchesPerMeter * dpi;
-                    
-                    document.getElementById('scale-ratio').innerHTML = "Scale 1:" + Math.round(scale).toLocaleString();
-                }
-            }
-
-            // Small delay to ensure 'map' object is created by qgis2web.js
-            setTimeout(function() {
-                if (typeof map !== 'undefined') {
+                    function updateScale() {
+                        var view = map.getView();
+                        var res = view.getResolution();
+                        var proj = view.getProjection();
+                        var mpu = ol.proj.getPointResolution(proj, res, view.getCenter()) * (1/res);
+                        var scale = res * mpu * 39.37 * (25.4 / 0.28);
+                        document.getElementById('scale-ratio').innerHTML = "Scale 1:" + Math.round(scale).toLocaleString();
+                    }
                     map.getView().on('change:resolution', updateScale);
                     updateScale();
                 }
-            }, 500);
+            };
         </script>
     </body>
 </html>
