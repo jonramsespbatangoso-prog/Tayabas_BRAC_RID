@@ -10,20 +10,23 @@
     <style>
         body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; }
         .navbar { background-color: #1e2b3a; color: white; padding: 15px; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); }
         .stat-card { color: white; padding: 20px; }
         .bg-blue { background-color: #3498db; }
         .bg-green { background-color: #27ae60; }
         .bg-teal { background-color: #16a085; }
-        .label { font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; }
-        .value { font-size: 2rem; font-weight: bold; }
-        .sub-value { font-size: 0.9rem; }
+        .label { font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 2.2rem; font-weight: bold; }
+        .sub-value { font-size: 0.9rem; opacity: 0.8; }
+        .chart-container { position: relative; height: 300px; }
+        .elevation-img { width: 100%; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <nav class="navbar d-flex justify-content-between align-items-center">
-    <span class="h5 m-0">Tayabas–Lucban Bypass Road Inventory Dashboard</span>
+    <span class="h5 m-0"><i class="fas fa-chart-line me-2"></i>Road Inventory & Asset Management Dashboard</span>
     <a href="index.html" class="btn btn-outline-light btn-sm px-3">
         <i class="fas fa-map-marked-alt me-2"></i> Back to Map
     </a>
@@ -33,23 +36,23 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card stat-card bg-blue">
-                <div class="label">Total Road Length</div>
+                <div class="label">Total Corridor Length</div>
                 <div class="value">16.32 km</div>
-                <div class="sub-value">822 segments</div>
+                <div class="sub-value">822 Surveyed Segments (20m each)</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card stat-card bg-green">
-                <div class="label">Good Roads</div>
+                <div class="label">Operational Status (Good)</div>
                 <div class="value">80.4%</div>
-                <div class="sub-value">661 of 822 segments</div>
+                <div class="sub-value">661 segments meet DPWH standards</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card stat-card bg-teal">
-                <div class="label">Concrete Surface</div>
+                <div class="label">Pavement Type (Concrete)</div>
                 <div class="value">47.4%</div>
-                <div class="sub-value">387 of 822 segments</div>
+                <div class="sub-value">387 rigid pavement segments</div>
             </div>
         </div>
     </div>
@@ -57,46 +60,71 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card p-4">
-                <h5>Road Length per Barangay (km)</h5>
-                <canvas id="barangayChart" height="150"></canvas>
+                <h5><i class="fas fa-city me-2 text-primary"></i>Road Length per Barangay (km)</h5>
+                <canvas id="barangayChart" height="140"></canvas>
             </div>
-        </div>
-        <div class="col-md-4">
+            
             <div class="card p-4">
-                <h5>Road Classification</h5>
-                <div class="mt-2">
-                    <p class="mb-1 small">Bypass Road (44.1%)</p>
-                    <div class="progress mb-2" style="height: 10px;"><div class="progress-bar" style="width: 44.1%; background-color: #3498db;"></div></div>
-                    <p class="mb-1 small">National Road (27.9%)</p>
-                    <div class="progress mb-2" style="height: 10px;"><div class="progress-bar" style="width: 27.9%; background-color: #9b59b6;"></div></div>
-                    <p class="mb-1 small">Barangay Road (17.6%)</p>
-                    <div class="progress mb-2" style="height: 10px;"><div class="progress-bar" style="width: 17.6%; background-color: #7f8c8d;"></div></div>
-                    <p class="mb-1 small">Provincial Road (10.3%)</p>
-                    <div class="progress" style="height: 10px;"><div class="progress-bar" style="width: 10.3%; background-color: #1abc9c;"></div></div>
+                <h5><i class="fas fa-mountain me-2 text-warning"></i>LiDAR Elevation Profile (Tayabas-Lucban Corridor)</h5>
+                <p class="text-muted small">Visual representation of terrain gradient across the survey area.</p>
+                <img src="elevation_profile.png" alt="Elevation Profile" class="elevation-img" onerror="this.src='https://via.placeholder.com/800x200?text=Insert+LiDAR+Elevation+Profile+Chart+Here'">
+                <div class="mt-3 row text-center">
+                    <div class="col-4">
+                        <div class="text-muted small">Min Elevation</div>
+                        <strong>131.4 m</strong>
+                    </div>
+                    <div class="col-4 border-start border-end">
+                        <div class="text-muted small">Avg Elevation</div>
+                        <strong>220.0 m</strong>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted small">Max Elevation</div>
+                        <strong>384.0 m</strong>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card p-4">
-                <h5>Road Condition Distribution</h5>
-                <div style="max-height: 300px; display: flex; justify-content: center;">
+                <h5><i class="fas fa-tags me-2 text-info"></i>Asset Classification</h5>
+                <div class="mt-3">
+                    <p class="mb-1 small d-flex justify-content-between"><span>Bypass Road</span> <span>44.1%</span></p>
+                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-primary" style="width: 44.1%;"></div></div>
+                    
+                    <p class="mb-1 small d-flex justify-content-between"><span>National Road</span> <span>27.9%</span></p>
+                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-info" style="width: 27.9%;"></div></div>
+                    
+                    <p class="mb-1 small d-flex justify-content-between"><span>Barangay Road</span> <span>17.6%</span></p>
+                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-secondary" style="width: 17.6%;"></div></div>
+                    
+                    <p class="mb-1 small d-flex justify-content-between"><span>Provincial Road</span> <span>10.3%</span></p>
+                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-dark" style="width: 10.3%;"></div></div>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <h5><i class="fas fa-tools me-2 text-danger"></i>Physical Condition</h5>
+                <div style="height: 250px;">
                     <canvas id="conditionChart"></canvas>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
+
             <div class="card p-4">
-                <h5>Surface Type Summary</h5>
-                <div class="mt-3">
-                    <p class="mb-1">Asphalt (52.6%)</p>
-                    <div class="progress mb-3" style="height: 20px;">
+                <h5><i class="fas fa-road me-2"></i>Surface Summary</h5>
+                <div class="mt-2">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>Asphalt (52.6%)</span>
+                        <span class="text-muted">8.59 km</span>
+                    </div>
+                    <div class="progress mb-3" style="height: 15px;">
                         <div class="progress-bar bg-danger" style="width: 52.6%"></div>
                     </div>
-                    <p class="mb-1">Concrete (47.4%)</p>
-                    <div class="progress" style="height: 20px;">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span>Concrete (47.4%)</span>
+                        <span class="text-muted">7.72 km</span>
+                    </div>
+                    <div class="progress" style="height: 15px;">
                         <div class="progress-bar bg-success" style="width: 47.4%"></div>
                     </div>
                 </div>
@@ -106,29 +134,41 @@
 </div>
 
 <script>
-    // Data from Table A.1
+    // Barangay Length Chart
     new Chart(document.getElementById('barangayChart'), {
         type: 'bar',
         data: {
             labels: ['Baguio', 'Ilayang Nangka', 'Wakas', 'Ipilan', 'Lakawan', 'Lalo-Opias', 'Mateuna', 'Lalo-Camaysa', 'Lalo'],
             datasets: [{
-                label: 'km',
+                label: 'Length (km)',
                 data: [3.31, 3.13, 2.98, 2.87, 1.39, 0.93, 0.69, 0.54, 0.48],
-                backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e67e22', '#9b59b6', '#1abc9c', '#7f8c8d', '#34495e', '#95a5a6']
+                backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e67e22', '#9b59b6', '#1abc9c', '#7f8c8d', '#34495e', '#95a5a6'],
+                borderRadius: 5
             }]
         },
-        options: { plugins: { legend: { display: false } } }
+        options: { 
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, title: { display: true, text: 'Kilometers' } } }
+        }
     });
 
-    // Data from Table A.3
+    // Condition Pie Chart
     new Chart(document.getElementById('conditionChart'), {
-        type: 'pie',
+        type: 'doughnut', // Changed to doughnut for a modern look
         data: {
             labels: ['Good', 'Fair', 'Poor'],
             datasets: [{
                 data: [80.4, 18.0, 1.6],
-                backgroundColor: ['#27ae60', '#f39c12', '#e74c3c']
+                backgroundColor: ['#27ae60', '#f39c12', '#e74c3c'],
+                borderWidth: 0
             }]
+        },
+        options: { 
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            cutout: '70%' 
         }
     });
 </script>
