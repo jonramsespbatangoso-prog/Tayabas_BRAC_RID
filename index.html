@@ -38,7 +38,7 @@
         }
 
         /* Hide default overlapping elements */
-        .ol-scale-line, .ol-attribution { display: none !important; }
+        .ol-scale-line { display: none !important; }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
     </head>
@@ -87,7 +87,7 @@
                         var proj = view.getProjection();
                         var center = view.getCenter();
                         
-                        // Accurate scale for Geodetic Surveying
+                        // Accurate scale for Geodetic Surveying in Tayabas
                         var dpi = 25.4 / 0.28; 
                         var mpu = ol.proj.getPointResolution(proj, res, center) * (1/res);
                         var scale = res * mpu * 39.3701 * dpi;
