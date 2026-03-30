@@ -18,27 +18,27 @@
         .dashboard-btn {
             position: absolute; top: 15px; right: 60px; z-index: 5000; 
             background: #2b3d51; color: #ffffff !important; 
-            padding: 10px 18px; border-radius: 8px; 
-            text-decoration: none !important; font-family: 'Segoe UI', sans-serif; 
-            font-weight: bold; font-size: 13px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 18px; border-radius: 8px; text-decoration: none !important; 
+            font-family: 'Segoe UI', sans-serif; font-weight: bold; font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
             display: flex; align-items: center; gap: 8px;
         }
 
-        /* North Arrow - Fixed Bottom Right */
+        /* North Arrow - Bottom Right */
         .north-arrow-container {
-            position: absolute !important; bottom: 20px !important; right: 20px !important; z-index: 5000;
+            position: absolute !important; bottom: 25px !important; right: 25px !important; z-index: 5000;
         }
 
-        /* Scale Ratio - Fixed Bottom Left */
+        /* Scale Ratio (1:Scale) - Bottom Left */
         .custom-scale-ratio {
-            position: absolute !important; bottom: 20px !important; left: 20px !important; z-index: 5001 !important;
-            background: rgba(255, 255, 255, 0.9); padding: 5px 12px; border: 1.5px solid #333;
-            font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold; color: #000;
+            position: absolute !important; bottom: 25px !important; left: 25px !important; z-index: 5001 !important;
+            background: rgba(255, 255, 255, 0.95); padding: 6px 15px; border: 2px solid #333;
+            font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; color: #000;
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.3);
         }
 
-        .ol-scale-line { display: none !important; }
+        /* Hide default overlapping elements */
+        .ol-scale-line, .ol-attribution { display: none !important; }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
     </head>
@@ -47,14 +47,21 @@
             <a href="dashboard.html" class="dashboard-btn">
                 <i class="fas fa-chart-bar"></i> DASHBOARD
             </a>
+
             <div id="scale-ratio" class="custom-scale-ratio">Scale 1:---</div>
+
             <div class="north-arrow-container">
                 <svg width="60" height="60" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.3" />
+                    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.4" />
                     <path d="M50 5 L65 45 L50 38 L35 45 Z" fill="#e74c3c" stroke="black" />
                     <path d="M50 95 L35 55 L50 62 L65 55 Z" fill="#2c3e50" stroke="black" />
                     <text x="44" y="28" font-family="Arial" font-size="14" font-weight="bold">N</text>
                 </svg>
+            </div>
+
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
             </div>
         </div>
 
@@ -66,39 +73,32 @@
         <script src="./resources/ol-layerswitcher.js"></script>
         <script src="resources/photon-geocoder-autocomplete.min.js"></script>
         <script src="./resources/Autolinker.min.js"></script>
-
-        <script src="layers/TayabasAdministrativeMap_1.js"></script>
-        <script src="layers/Elevation_2.js"></script>
-        <script src="layers/SurfaceType_3.js"></script>
-        <script src="layers/RoadCondition_4.js"></script>
-        <script src="layers/RoadClassification_5.js"></script>
-        <script src="layers/RoadinventoryDatabase_6.js"></script>
-        <script src="styles/TayabasAdministrativeMap_1_style.js"></script>
-        <script src="styles/Elevation_2_style.js"></script>
-        <script src="styles/SurfaceType_3_style.js"></script>
-        <script src="styles/RoadCondition_4_style.js"></script>
-        <script src="styles/RoadClassification_5_style.js"></script>
-        <script src="styles/RoadinventoryDatabase_6_style.js"></script>
-        <script src="./layers/layers.js" type="text/javascript"></script> 
-
+        
+        <script src="layers/layers.js" type="text/javascript"></script> 
         <script src="./resources/qgis2web.js"></script>
         
         <script>
-            // Safety Check: Only run if the map object was successfully created
-            window.onload = function() {
+            // This runs once the map and layers are initialized
+            window.addEventListener('load', function() {
                 if (typeof map !== 'undefined') {
                     function updateScale() {
                         var view = map.getView();
                         var res = view.getResolution();
                         var proj = view.getProjection();
-                        var mpu = ol.proj.getPointResolution(proj, res, view.getCenter()) * (1/res);
-                        var scale = res * mpu * 39.37 * (25.4 / 0.28);
+                        var center = view.getCenter();
+                        
+                        // Accurate scale for Geodetic Surveying
+                        var dpi = 25.4 / 0.28; 
+                        var mpu = ol.proj.getPointResolution(proj, res, center) * (1/res);
+                        var scale = res * mpu * 39.3701 * dpi;
+                        
                         document.getElementById('scale-ratio').innerHTML = "Scale 1:" + Math.round(scale).toLocaleString();
                     }
+                    
                     map.getView().on('change:resolution', updateScale);
                     updateScale();
                 }
-            };
+            });
         </script>
     </body>
 </html>
