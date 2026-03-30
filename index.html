@@ -13,10 +13,7 @@
         <link rel="stylesheet" href="./resources/qgis2web.css">
         <style>
         html, body, #map {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
+            width: 100%; height: 100%; padding: 0; margin: 0;
             background-color: #ffffff;
         }
 
@@ -24,7 +21,7 @@
         .dashboard-btn {
             position: absolute; 
             top: 15px; 
-            right: 60px; /* Adjusted to not block zoom controls */
+            right: 60px; 
             z-index: 5000; 
             background: #2b3d51; 
             color: #ffffff !important; 
@@ -36,49 +33,45 @@
             font-size: 13px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
         }
 
-        /* The Legend */
-        .custom-legend {
+        /* Embedded North Arrow (SVG) */
+        .north-arrow-container {
             position: absolute;
-            bottom: 30px;
-            right: 20px;
-            z-index: 5000;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 12px;
-            border-radius: 5px;
-            border: 2px solid #333;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        }
-        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
-        .box { width: 20px; height: 10px; margin-right: 8px; border: 1px solid #000; }
-
-        /* North Arrow & Scale Bar */
-        .map-tools-left {
-            position: absolute;
-            bottom: 30px;
+            bottom: 60px; /* Raised to make room for scale bar */
             left: 20px;
             z-index: 5000;
-            pointer-events: none; /* Allows clicking through to map if needed */
+            text-align: center;
         }
-        .north-arrow-img {
-            width: 50px;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+        .north-arrow-svg {
+            width: 45px;
+            height: 45px;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
         }
-        .scale-info {
-            background: rgba(255,255,255,0.8);
-            padding: 2px 6px;
-            font-size: 11px;
+
+        /* Style for the dynamic OpenLayers Scale Line */
+        .ol-scale-line {
+            left: 20px !important;
+            bottom: 20px !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 4px !important;
+            padding: 2px !important;
+            z-index: 5000 !important;
+        }
+        
+        /* Survey Info Label */
+        .survey-label {
+            position: absolute;
+            bottom: 20px;
+            left: 140px; /* Positioned next to the scale bar */
+            z-index: 5000;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
             font-weight: bold;
-            border: 1px solid #333;
-            display: block;
-            margin-top: 5px;
-            width: fit-content;
+            color: #333;
+            background: rgba(255,255,255,0.6);
+            padding: 2px 5px;
         }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory</title>
@@ -89,21 +82,16 @@
                 <i class="fas fa-chart-bar"></i> DASHBOARD
             </a>
 
-            <div class="custom-legend">
-                <strong>ROAD CONDITION</strong><br>
-                <div class="legend-item"><span class="box" style="background:#27ae60"></span> Good</div>
-                <div class="legend-item"><span class="box" style="background:#f39c12"></span> Fair</div>
-                <div class="legend-item"><span class="box" style="background:#e74c3c"></span> Poor</div>
-                <hr style="margin:5px 0">
-                <strong>SURFACE TYPE</strong><br>
-                <div class="legend-item"><span class="box" style="background:#c0392b"></span> Asphalt</div>
-                <div class="legend-item"><span class="box" style="background:#bdc3c7"></span> Concrete</div>
+            <div class="north-arrow-container">
+                <svg class="north-arrow-svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="48" fill="white" fill-opacity="0.3" stroke="black" stroke-width="2"/>
+                    <path d="M50 5 L60 45 L50 40 L40 45 Z" fill="red" stroke="black" stroke-width="1"/>
+                    <path d="M50 95 L40 55 L50 60 L60 55 Z" fill="black" stroke="black" stroke-width="1"/>
+                    <text x="45" y="25" font-family="Arial" font-size="12" font-weight="bold">N</text>
+                </svg>
             </div>
 
-            <div class="map-tools-left">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Compass_Rose_North_Simple.svg" class="north-arrow-img">
-                <div class="scale-info">MSEUF GE: 1:500</div>
-            </div>
+            <div class="survey-label">MSEUF GEODETIC ENG.</div>
 
             <div id="popup" class="ol-popup">
                 <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -132,6 +120,18 @@
         <script src="styles/RoadinventoryDatabase_6_style.js"></script>
         <script src="./layers/layers.js" type="text/javascript"></script> 
         <script src="./resources/Autolinker.min.js"></script>
-        <script src="./resources/qgis2web.js"></script>          
+        <script src="./resources/qgis2web.js"></script>
+        
+        <script>
+            // This manually adds the dynamic Scale Bar to your map
+            var scaleLineControl = new ol.control.ScaleLine({
+                units: 'metric',
+                bar: true,
+                steps: 4,
+                text: true,
+                minWidth: 100
+            });
+            map.addControl(scaleLineControl);
+        </script>
     </body>
 </html>
