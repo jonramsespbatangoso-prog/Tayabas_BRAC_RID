@@ -12,8 +12,27 @@
         <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
         <link rel="stylesheet" href="./resources/qgis2web.css">
         <style>
-        html, body { background-color: #ffffff; margin: 0; padding: 0; width: 100%; height: 100%; }
-        #map { width: 100%; height: 100%; }
+        html, body {
+            background-color: #ffffff;
+        }
+        .ol-control > * {
+            background-color: #f8f8f8!important;
+            color: #444444!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #444444!important;
+        }
+        .search-layer-input-search {
+            background-color: #f8f8f8!important;
+        }
+        .ol-control > *:focus, .ol-control >*:hover {
+            background-color: rgba(248, 248, 248, 0.7)!important;
+        } 
+        .ol-control {
+            background-color: rgba(255,255,255,.4) !important;
+            padding: 2px !important;
+        } 
 
         /* ALIGNED BUTTON CONTAINER */
         .map-action-container {
@@ -26,7 +45,7 @@
             gap: 12px;
         }
 
-        /* MATCHING BUTTON STYLES */
+        /* UNIFIED BUTTON STYLE */
         .map-btn {
             width: 200px; 
             padding: 14px 0;
@@ -35,7 +54,7 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
             font-weight: bold;
             font-size: 13px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -45,18 +64,23 @@
             cursor: pointer;
             color: #ffffff !important;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .report-btn { background: #e67e22; }
-        .dashboard-btn { background: #2b3d51; }
+        .report-btn {
+            background: #e67e22; 
+        }
+
+        .dashboard-btn {
+            background: #2b3d51; 
+        }
 
         .map-btn:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             filter: brightness(1.1);
         }
 
-        /* Selection Mode Animation */
         .selecting-mode {
             background: #c0392b !important;
             animation: pulse-red 1.5s infinite;
@@ -68,7 +92,12 @@
             100% { transform: scale(1); }
         }
 
-        .ol-control { background-color: rgba(255,255,255,.4) !important; padding: 2px !important; }
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
         </style>
         <title>Tayabas–Lucban Bypass Road Inventory Web Map</title>
     </head>
@@ -77,6 +106,7 @@
             <a href="#" class="map-btn report-btn" id="reportBtn">
                 <i class="fas fa-map-marker-alt"></i> Report Road Issue
             </a>
+
             <a href="dashboard.html" class="map-btn dashboard-btn">
                 <i class="fas fa-chart-bar"></i> View Dashboard
             </a>
@@ -116,46 +146,21 @@
         <script src="./resources/qgis2web.js"></script>
 
         <script>
-        // --- 1. CORRECTED HOVER HIGHLIGHT LOGIC ---
-        var highlight;
-        var highlightStyle = new ol.style.Style({
-            stroke: new ol.style.Stroke({ color: '#f1c40f', width: 4 }),
-            fill: new ol.style.Fill({ color: 'rgba(241, 196, 15, 0.2)' })
-        });
-
-        map.on('pointermove', function(evt) {
-            if (evt.dragging) return;
-            
-            var pixel = map.getEventPixel(evt.originalEvent);
-            var feature = map.forEachFeatureAtPixel(pixel, function(f) {
-                return f;
-            });
-
-            // If highlight exists and we move to a different feature or empty space
-            if (highlight && feature !== highlight) {
-                highlight.setStyle(undefined); // Reset to original layer style
-                highlight = null;
-            }
-
-            // If we move onto a feature that isn't already highlighted
-            if (feature && feature !== highlight) {
-                feature.setStyle(highlightStyle);
-                highlight = feature;
-            }
-        });
-
-        // --- 2. REPORTING LOGIC ---
         document.getElementById('reportBtn').addEventListener('click', function(e) {
             e.preventDefault();
             const btn = this;
             
+            // 1. Give visual feedback that the user should select a spot on the map
             btn.classList.add('selecting-mode');
             btn.innerHTML = '<i class="fas fa-crosshairs"></i> Select Location...';
             
+            // 2. Wait for one click on the map
             map.once('click', function(evt) {
+                // 3. Reset button appearance
                 btn.classList.remove('selecting-mode');
                 btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Report Road Issue';
 
+                // 4. Open the form in a new tab
                 const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdO1z3GxkdypTtoE0Se0K0U91IjFJhG2vx3qSh4X-ACnAd9Pg/viewform?usp=dialog";
                 window.open(formURL, '_blank');
             });
