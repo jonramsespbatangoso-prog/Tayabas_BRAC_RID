@@ -150,33 +150,19 @@
             e.preventDefault();
             const btn = this;
             
+            // 1. Give visual feedback that the user should select a spot on the map
             btn.classList.add('selecting-mode');
-            btn.innerHTML = '<i class="fas fa-crosshairs"></i> Select Segment...';
+            btn.innerHTML = '<i class="fas fa-crosshairs"></i> Select Location...';
             
+            // 2. Wait for one click on the map
             map.once('click', function(evt) {
-                let roadId = "";
-                let roadOrder = "";
-                
-                map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-                    // Pulling attributes from your RoadinventoryDatabase_6 layer
-                    roadId = feature.get('ID') || feature.get('Road_ID') || "";
-                    roadOrder = feature.get('Order') || feature.get('segment') || "";
-                    return true; 
-                });
-
+                // 3. Reset button appearance
                 btn.classList.remove('selecting-mode');
                 btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Report Road Issue';
 
-                // CORRECTED GOOGLE FORM REDIRECT
+                // 4. Open the form in a new tab
                 const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdO1z3GxkdypTtoE0Se0K0U91IjFJhG2vx3qSh4X-ACnAd9Pg/viewform?usp=dialog";
-                
-                // Replace these with your actual entry IDs found via "Get pre-filled link"
-                const entryUniqueId = "entry.XXXXXXX"; 
-                const entryOrder    = "entry.YYYYYYY"; 
-
-                const finalUrl = `${formURL}?usp=pp_url&${entryUniqueId}=${encodeURIComponent(roadId)}&${entryOrder}=${encodeURIComponent(roadOrder)}`;
-                
-                window.open(finalUrl, '_blank');
+                window.open(formURL, '_blank');
             });
         });
         </script>
