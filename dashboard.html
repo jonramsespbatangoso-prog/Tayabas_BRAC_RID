@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tayabas–Lucban Bypass Road Inventory Dashboard</title>
+    <title>RAMS - Road Inventory Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; }
         .navbar { background-color: #1e2b3a; color: white; padding: 15px; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-3px); }
-        .stat-card { color: white; padding: 20px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .stat-card { color: white; padding: 20px; position: relative; overflow: hidden; }
         .bg-blue { background-color: #3498db; }
         .bg-green { background-color: #27ae60; }
-        .bg-teal { background-color: #16a085; }
+        .bg-danger-custom { background-color: #e74c3c; }
         .label { font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
         .value { font-size: 2.2rem; font-weight: bold; }
         .sub-value { font-size: 0.9rem; opacity: 0.8; }
-        .chart-container { position: relative; height: 300px; }
-        .elevation-img { width: 100%; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; }
+        .chart-container { position: relative; height: 250px; }
+        .table-priority { background-color: white; border-radius: 12px; overflow: hidden; }
+        .table-priority thead { background-color: #2c3e50; color: white; }
+        .highlight-row { border-left: 5px solid #e74c3c; }
+        .badge-asphalt { background-color: #34495e; color: white; }
+        .badge-concrete { background-color: #95a5a6; color: black; }
     </style>
 </head>
 <body>
 
 <nav class="navbar d-flex justify-content-between align-items-center">
-    <span class="h5 m-0"><i class="fas fa-chart-line me-2"></i>Road Inventory & Asset Management Dashboard</span>
+    <span class="h5 m-0"><i class="fas fa-shield-alt me-2"></i>RAMS: Road Asset Management Dashboard</span>
     <a href="index.html" class="btn btn-outline-light btn-sm px-3">
         <i class="fas fa-map-marked-alt me-2"></i> Back to Map
     </a>
@@ -36,23 +39,23 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card stat-card bg-blue">
-                <div class="label">Total Corridor Length</div>
+                <div class="label">Total Network</div>
                 <div class="value">16.32 km</div>
-                <div class="sub-value">822 Surveyed Segments (20m each)</div>
+                <div class="sub-value">822 Surveyed Segments</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card stat-card bg-green">
-                <div class="label">Operational Status (Good)</div>
-                <div class="value">80.4%</div>
-                <div class="sub-value">661 segments meet DPWH standards</div>
+                <div class="label">Operational (Good)</div>
+                <div class="value">80.6%</div>
+                <div class="sub-value">13.15 km meeting standards</div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card stat-card bg-teal">
-                <div class="label">Pavement Type (Concrete)</div>
-                <div class="value">47.4%</div>
-                <div class="sub-value">387 rigid pavement segments</div>
+            <div class="card stat-card bg-danger-custom">
+                <div class="label">Priority Rehabilitation</div>
+                <div class="value">0.25 km</div>
+                <div class="sub-value">1.6% of network requires immediate repair</div>
             </div>
         </div>
     </div>
@@ -61,72 +64,151 @@
         <div class="col-md-8">
             <div class="card p-4">
                 <h5><i class="fas fa-city me-2 text-primary"></i>Road Length per Barangay (km)</h5>
-                <canvas id="barangayChart" height="140"></canvas>
-            </div>
-            
-            <div class="card p-4">
-                <h5><i class="fas fa-mountain me-2 text-warning"></i>LiDAR Elevation Profile (Tayabas-Lucban Corridor)</h5>
-                <p class="text-muted small">Visual representation of terrain gradient across the survey area.</p>
-                <img src="elevation_profile.png" alt="Elevation Profile" class="elevation-img" onerror="this.src='https://via.placeholder.com/800x200?text=Insert+LiDAR+Elevation+Profile+Chart+Here'">
-                <div class="mt-3 row text-center">
-                    <div class="col-4">
-                        <div class="text-muted small">Min Elevation</div>
-                        <strong>131.4 m</strong>
-                    </div>
-                    <div class="col-4 border-start border-end">
-                        <div class="text-muted small">Avg Elevation</div>
-                        <strong>220.0 m</strong>
-                    </div>
-                    <div class="col-4">
-                        <div class="text-muted small">Max Elevation</div>
-                        <strong>384.0 m</strong>
-                    </div>
-                </div>
+                <canvas id="barangayChart" height="150"></canvas>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card p-4">
-                <h5><i class="fas fa-tags me-2 text-info"></i>Asset Classification</h5>
-                <div class="mt-3">
-                    <p class="mb-1 small d-flex justify-content-between"><span>Bypass Road</span> <span>44.1%</span></p>
-                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-primary" style="width: 44.1%;"></div></div>
-                    
-                    <p class="mb-1 small d-flex justify-content-between"><span>National Road</span> <span>27.9%</span></p>
-                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-info" style="width: 27.9%;"></div></div>
-                    
-                    <p class="mb-1 small d-flex justify-content-between"><span>Barangay Road</span> <span>17.6%</span></p>
-                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-secondary" style="width: 17.6%;"></div></div>
-                    
-                    <p class="mb-1 small d-flex justify-content-between"><span>Provincial Road</span> <span>10.3%</span></p>
-                    <div class="progress mb-3" style="height: 8px;"><div class="progress-bar bg-dark" style="width: 10.3%;"></div></div>
-                </div>
-            </div>
-
-            <div class="card p-4">
-                <h5><i class="fas fa-tools me-2 text-danger"></i>Physical Condition</h5>
-                <div style="height: 250px;">
+            <div class="card p-4 text-center">
+                <h5><i class="fas fa-tools me-2 text-danger"></i>Network Health Score</h5>
+                <div class="chart-container mt-3">
                     <canvas id="conditionChart"></canvas>
                 </div>
+                <div class="mt-3">
+                    <p class="small text-muted mb-1">Poor Condition Surface Breakdown:</p>
+                    <span class="badge badge-asphalt me-1">Asphalt: 61.5%</span>
+                    <span class="badge badge-concrete">Concrete: 38.5%</span>
+                </div>
             </div>
+        </div>
+    </div>
 
+    <div class="row mt-2">
+        <div class="col-12">
             <div class="card p-4">
-                <h5><i class="fas fa-road me-2"></i>Surface Summary</h5>
-                <div class="mt-2">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span>Asphalt (52.6%)</span>
-                        <span class="text-muted">8.59 km</span>
-                    </div>
-                    <div class="progress mb-3" style="height: 15px;">
-                        <div class="progress-bar bg-danger" style="width: 52.6%"></div>
-                    </div>
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span>Concrete (47.4%)</span>
-                        <span class="text-muted">7.72 km</span>
-                    </div>
-                    <div class="progress" style="height: 15px;">
-                        <div class="progress-bar bg-success" style="width: 47.4%"></div>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-danger m-0"><i class="fas fa-exclamation-triangle me-2"></i>Table III: Inventory of Priority Road Segments for Rehabilitation</h5>
+                    <button class="btn btn-sm btn-outline-danger" onclick="window.print()"><i class="fas fa-print me-1"></i> Print Inventory</button>
+                </div>
+                <div class="table-responsive table-priority">
+                    <table class="table table-hover align-middle border">
+                        <thead>
+                            <tr>
+                                <th>Segment ID</th>
+                                <th>Barangay</th>
+                                <th>Start Stationing</th>
+                                <th>End Stationing</th>
+                                <th>Surface Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="highlight-row">
+                                <td><strong>RD_BP_Lalo_23_000</strong></td>
+                                <td>Lalo</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>BR_PR_Baguio–Malao-a_35</strong></td>
+                                <td>Baguio–Malao-a</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_046</strong></td>
+                                <td>Baguio</td>
+                                <td>0+920</td>
+                                <td>0+940</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_047</strong></td>
+                                <td>Baguio</td>
+                                <td>0+940</td>
+                                <td>0+960</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_048</strong></td>
+                                <td>Baguio</td>
+                                <td>0+960</td>
+                                <td>0+980</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_33_058</strong></td>
+                                <td>Baguio</td>
+                                <td>1+160</td>
+                                <td>1+180</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_34_000</strong></td>
+                                <td>Baguio</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_34_001</strong></td>
+                                <td>Baguio</td>
+                                <td>0+020</td>
+                                <td>0+040</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_34_002</strong></td>
+                                <td>Baguio</td>
+                                <td>0+040</td>
+                                <td>0+060</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_34_003</strong></td>
+                                <td>Baguio</td>
+                                <td>0+060</td>
+                                <td>0+080</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_34_004</strong></td>
+                                <td>Baguio</td>
+                                <td>0+080</td>
+                                <td>0+100</td>
+                                <td><span class="badge badge-concrete">Concrete</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_006</strong></td>
+                                <td>Baguio</td>
+                                <td>0+120</td>
+                                <td>0+140</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_007</strong></td>
+                                <td>Baguio</td>
+                                <td>0+140</td>
+                                <td>0+160</td>
+                                <td><span class="badge badge-asphalt">Asphalt</span></td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -142,33 +224,31 @@
             datasets: [{
                 label: 'Length (km)',
                 data: [3.31, 3.13, 2.98, 2.87, 1.39, 0.93, 0.69, 0.54, 0.48],
-                backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e67e22', '#9b59b6', '#1abc9c', '#7f8c8d', '#34495e', '#95a5a6'],
+                backgroundColor: '#3498db',
                 borderRadius: 5
             }]
         },
-        options: { 
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, title: { display: true, text: 'Kilometers' } } }
-        }
+        options: { responsive: true, plugins: { legend: { display: false } } }
     });
 
-    // Condition Pie Chart
+    // Network Health Doughnut
     new Chart(document.getElementById('conditionChart'), {
-        type: 'doughnut', // Changed to doughnut for a modern look
+        type: 'doughnut',
         data: {
-            labels: ['Good', 'Fair', 'Poor'],
+            labels: ['Good (80.6%)', 'Fair (17.8%)', 'Poor (1.6%)'],
             datasets: [{
-                data: [80.4, 18.0, 1.6],
-                backgroundColor: ['#27ae60', '#f39c12', '#e74c3c'],
+                data: [80.6, 17.8, 1.6],
+                backgroundColor: ['#27ae60', '#f1c40f', '#e74c3c'],
+                hoverOffset: 10,
                 borderWidth: 0
             }]
         },
-        options: { 
+        options: {
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } },
-            cutout: '70%' 
+            cutout: '75%',
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
+            }
         }
     });
 </script>
