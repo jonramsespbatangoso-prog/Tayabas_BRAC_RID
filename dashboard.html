@@ -126,7 +126,7 @@
         <div class="col-12">
             <div class="card p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-danger m-0"><i class="fas fa-exclamation-triangle me-2"></i>Table III: Priority Road Segments for Rehabilitation</h5>
+                    <h5 class="text-danger m-0"><i class="fas fa-exclamation-triangle me-2"></i>Table III: Full Inventory of Priority Road Segments</h5>
                     <button class="btn btn-sm btn-outline-danger" onclick="window.print()"><i class="fas fa-print me-1"></i> Print Inventory</button>
                 </div>
                 <div class="table-responsive table-priority">
@@ -135,21 +135,131 @@
                             <tr>
                                 <th>Segment ID</th>
                                 <th>Barangay</th>
-                                <th>Start Stationing</th>
-                                <th>End Stationing</th>
+                                <th>Classification</th>
+                                <th>Start Station</th>
+                                <th>End Station</th>
                                 <th>Surface</th>
                                 <th>Condition</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="highlight-row"><td><strong>RD_BP_Lalo_23_000</strong></td><td>Lalo</td><td>0+000</td><td>0+020</td><td>Asphalt</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row table-light"><td><strong>RD_PR_Baguio_33_046</strong></td><td>Baguio</td><td>0+920</td><td>0+940</td><td>Asphalt</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row table-light"><td><strong>RD_PR_Baguio_33_047</strong></td><td>Baguio</td><td>0+940</td><td>0+960</td><td>Asphalt</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row table-light"><td><strong>RD_PR_Baguio_33_048</strong></td><td>Baguio</td><td>0+960</td><td>0+980</td><td>Asphalt</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row"><td><strong>RD_PR_Baguio_34_000</strong></td><td>Baguio</td><td>0+000</td><td>0+020</td><td>Concrete</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row"><td><strong>RD_PR_Baguio_34_001</strong></td><td>Baguio</td><td>0+020</td><td>0+040</td><td>Concrete</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row"><td><strong>RD_PR_Baguio_34_002</strong></td><td>Baguio</td><td>0+040</td><td>0+060</td><td>Concrete</td><td class="text-danger fw-bold">Poor</td></tr>
-                            <tr class="highlight-row"><td><strong>RD_PR_Baguio_34_003</strong></td><td>Baguio</td><td>0+060</td><td>0+080</td><td>Concrete</td><td class="text-danger fw-bold">Poor</td></tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_BP_Lalo_23_000</strong></td>
+                                <td>Lalo</td>
+                                <td>Bypass Road</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>BR_PR_Baguio–Malao-a_35</strong></td>
+                                <td>Baguio–Malao-a</td>
+                                <td>Provincial Road</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_046</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+920</td>
+                                <td>0+940</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_047</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+940</td>
+                                <td>0+960</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_048</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+960</td>
+                                <td>0+980</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row table-light">
+                                <td><strong>RD_PR_Baguio_33_058</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>1+160</td>
+                                <td>1+180</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_000</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+000</td>
+                                <td>0+020</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_001</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+020</td>
+                                <td>0+040</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_002</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+040</td>
+                                <td>0+060</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_003</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+060</td>
+                                <td>0+080</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_004</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+080</td>
+                                <td>0+100</td>
+                                <td>Concrete</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_006</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+120</td>
+                                <td>0+140</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>RD_PR_Baguio_34_007</strong></td>
+                                <td>Baguio</td>
+                                <td>Provincial Road</td>
+                                <td>0+140</td>
+                                <td>0+160</td>
+                                <td>Asphalt</td>
+                                <td class="text-danger fw-bold">Poor</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
